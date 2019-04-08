@@ -3,7 +3,7 @@ const UserController = require('../controllers/user.controller');
 
 const router = express.Router();
 
-router.route('/user')
-  .get(UserController.getUser);
+router.route('/user/:email')
+  .get(UserController.getUserByEmail);
 
 module.exports = router;

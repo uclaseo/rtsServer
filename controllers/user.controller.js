@@ -1,10 +1,12 @@
 const { getMongoDatabase } = require('../connections/mongoConnection');
 
 const UserController = {
-  getUser: async (req, res) => {
+  getUserByEmail: async (req, res) => {
+    const { email } = req.params;
     const db = getMongoDatabase();
     const collection = db.collection('user');
-    res.send('get user');
+    const user = await collection.findOne({ email });
+    res.send(user);
   },
 };
 
