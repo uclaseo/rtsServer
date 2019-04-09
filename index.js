@@ -3,9 +3,11 @@ const bodyParser = require('body-parser');
 const { initializeMongo } = require('./connections/mongoConnection');
 
 const userRouter = require('./routes/user.routes');
+const lessonRouter = require('./routes/lesson.routes');
 
 const routers = [
   userRouter,
+  lessonRouter,
 ];
 
 const app = express();
