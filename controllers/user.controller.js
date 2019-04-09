@@ -7,7 +7,10 @@ const UserController = {
       const db = getMongoDatabase();
       const collection = db.collection('user');
       const user = await collection.findOne({ email });
-      res.send(user);
+      res.send({
+        success: true,
+        user,
+      });
     } catch (error) {
       console.error('getUserByEmail error: ', error);
     }
@@ -27,9 +30,31 @@ const UserController = {
         email,
         role,
       });
-      res.send('createdUser');
+      res.send({
+        success: true,
+      });
     } catch (error) {
       console.error('createUser error: ', error);
+    }
+  },
+  getCoaches: async (req, res) => {
+    try {
+      const db = getMongoDatabase();
+      const collection = db.collection('user');
+      const coaches = await collection
+        .find({
+          role: {
+            isMember: false,
+            isCoach: true,
+          },
+        })
+        .toArray();
+      res.send({
+        success: true,
+        coaches,
+      });
+    } catch (error) {
+      console.error('getCoaches error: ', error);
     }
   },
 };

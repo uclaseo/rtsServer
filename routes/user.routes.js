@@ -9,4 +9,7 @@ router.route('/user/:email')
 router.route('/user')
   .post(UserController.createUser);
 
+router.route('/user/coach/getCoaches')
+  .get(UserController.getCoaches);
+
 module.exports = router;

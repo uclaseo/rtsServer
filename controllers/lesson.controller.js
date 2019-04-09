@@ -4,28 +4,40 @@ const LessonController = {
   joinLesson: async (req, res) => {
     try {
       const {
-        user: {
-          _id,
-          name,
-          email,
-          role: {
-            isMember,
-            isCoach,
-          },
-        },
-        coachName,
+        user,
+        coach,
       } = req.body;
+
+      if (!coach.role.isCoach) {
+        return res.send({
+          success: false,
+          message: 'The selected person is not a coach',
+        });
+      }
+
       const db = getMongoDatabase();
       const collection = db.collection('user');
-      // const coach = await collection.findOne({ _id, name, email });
-      const coach = await collection.findOne({ name: 'Inseok Seo', email: 'illhvhlda@hotmail.com' });
-      const updatedCoach = {
-        ...coach,
-        students: coach.students += 1,
-      };
-      console.log('coach', coach);
-      console.log('updatedCoach', updatedCoach);
-      res.send(user);
+      const updatedCoach = await collection.findOneAndUpdate(
+        { name: coach.name, email: coach.email },
+        {
+          $set: { students: coach.students + 1 },
+        },
+        {
+          returnOriginal: false,
+        },
+      );
+      if (!updatedCoach.ok) {
+        res.send({
+          success: false,
+          message: 'The coach is not updated correctly',
+        });
+      }
+
+      return res.send({
+        success: true,
+        coach: updatedCoach.value,
+      });
+
     } catch (error) {
       console.error('joinLesson error: ', error);
     }
