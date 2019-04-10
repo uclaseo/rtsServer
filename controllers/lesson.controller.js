@@ -15,12 +15,32 @@ const LessonController = {
         });
       }
 
+      const newList = coach.students.list.slice();
+      const newCount = coach.students.count + 1;
+      const index = newList.findIndex((student) => {
+        return student.name === user.name && student.email === user.email;
+      });
+
+      if (index >= 0) {
+        return res.send({
+          success: false,
+          message: 'You are already registered to the coach',
+        });
+      }
+      newList.push(user);
+
       const db = getMongoDatabase();
       const collection = db.collection('user');
       const updatedCoach = await collection.findOneAndUpdate(
         { name: coach.name, email: coach.email },
         {
-          $set: { students: coach.students + 1 },
+          $set: {
+            students: {
+              list: newList,
+              count: newCount,
+            },
+          },
+          // $push: { students: { list: user } },
         },
         {
           returnOriginal: false,

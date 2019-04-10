@@ -17,19 +17,11 @@ const UserController = {
   },
   createUser: async (req, res) => {
     try {
-      const {
-        name,
-        email,
-        role,
-      } = req.body;
+      const { user } = req.body;
   
       const db = getMongoDatabase();
       const collection = db.collection('user');
-      await collection.insertOne({
-        name,
-        email,
-        role,
-      });
+      await collection.insertOne(user);
       res.send({
         success: true,
       });
