@@ -2,6 +2,7 @@ const { getCollection } = require('../connections/mongoConnection');
 
 const LessonController = {
   joinLesson: async (req, res) => {
+    console.log('joinLesson called');
     try {
       const {
         user,
@@ -27,7 +28,10 @@ const LessonController = {
           message: 'You are already registered to the coach',
         });
       }
-      newList.push(user);
+      newList.push({
+        name: user.name,
+        email: user.email,
+      });
 
       const collection = getCollection('user');
       const updatedCoach = await collection.findOneAndUpdate(
@@ -46,7 +50,7 @@ const LessonController = {
         },
       );
       if (!updatedCoach.ok) {
-        res.send({
+        return res.send({
           success: false,
           message: 'The coach is not updated correctly',
         });
@@ -63,10 +67,13 @@ const LessonController = {
             },
           },
         },
+        {
+          returnOriginal: false,
+        },
       );
 
       if (!updatedUser.ok) {
-        res.send({
+        return res.send({
           success: false,
           message: 'The user is not updated correctly',
         });
@@ -79,7 +86,7 @@ const LessonController = {
       });
 
     } catch (error) {
-      console.error('joinLesson error: ', error);
+      return console.error('joinLesson error: ', error);
     }
   },
 };

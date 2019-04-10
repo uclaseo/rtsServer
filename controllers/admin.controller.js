@@ -2,65 +2,128 @@ const { getCollection } = require('../connections/mongoConnection');
 
 const AdminController = {
   purgeDatabase: async (req, res) => {
+    console.log('purgeDatabase called');
     try {
       const collection = getCollection('user');
-      const response = await collection.remove({});
-      console.log(response.result);
-      res.send({
+      const { result } = await collection.remove({});
+      console.log(result);
+      if (!result.ok) {
+        return res.send({
+          success: false,
+          message: 'purgeDatabase did not correctly removed database',
+        });
+      }
+      return res.send({
         success: true,
       });
     } catch (error) {
-      console.error('purgeDatabase error: ', error);
+      return console.error('purgeDatabase error: ', error);
     }
   },
-  insertDummyData: async (req, res) => {
+  insertDummyUsers: async (req, res) => {
+    console.log('insertDummyUsers called');
     try {
-      const { email } = req.params;
-      const db = getMongoDatabase();
-      const collection = db.collection('user');
-      const user = await collection.findOne({ email });
-      res.send({
+      const dummyUsers = [
+        {
+          name: 'Jeff Lee',
+          email: 'Jeffjlee91@yahoo.com',
+          role: {
+            isMember: false,
+            isCoach: true,
+          },
+          students: {
+            list: [],
+            count: 0,
+          }
+        },
+        {
+          name: 'Eddie Choi',
+          email: 'Eddiechoi12@gmail.com',
+          role: {
+            isMember: false,
+            isCoach: true,
+          },
+          students: {
+            list: [],
+            count: 0,
+          }
+        },
+        {
+          name: 'Sang Hyuk Yoon',
+          email: ' DennyYoon91@gmail.com',
+          role: {
+            isMember: false,
+            isCoach: true,
+          },
+          students: {
+            list: [],
+            count: 0,
+          }
+        },
+        {
+          name: 'Dong Koon Yoo',
+          email: 'Dongkoon.Yoon@gmail.com',
+          role: {
+            isMember: false,
+            isCoach: true,
+          },
+          students: {
+            list: [],
+            count: 0,
+          }
+        },
+        {
+          name: 'Hyun Soo Jo',
+          email: 'hyunsu913@gmail.com',
+          role: {
+            isMember: false,
+            isCoach: true,
+          },
+          students: {
+            list: [],
+            count: 0,
+          }
+        },
+        {
+          name: 'Daero',
+          email: 'derowon@gmail.com',
+          role: {
+            isMember: false,
+            isCoach: true,
+          },
+          students: {
+            list: [],
+            count: 0,
+          }
+        },
+      ];
+      const collection = getCollection('user');
+      const { result } = await collection.insertMany(dummyUsers);
+      if (!result.ok) {
+        return res.send({
+          success: false,
+          message: 'insertDummyData did not insert correctly',
+        });
+      }
+      return res.send({
         success: true,
-        user,
       });
     } catch (error) {
-      console.error('insertDummyData error: ', error);
+      return console.error('insertDummyUsers error: ', error);
     }
   },
-  // createUser: async (req, res) => {
-  //   try {
-  //     const { user } = req.body;
-  
-  //     const db = getMongoDatabase();
-  //     const collection = db.collection('user');
-  //     await collection.insertOne(user);
-  //     res.send({
-  //       success: true,
-  //     });
-  //   } catch (error) {
-  //     console.error('createUser error: ', error);
-  //   }
-  // },
-  // getCoaches: async (req, res) => {
-  //   try {
-  //     const db = getMongoDatabase();
-  //     const collection = db.collection('user');
-  //     const coaches = await collection
-  //       .find({
-  //         role: {
-  //           isMember: false,
-  //           isCoach: true,
-  //         },
-  //       })
-  //       .toArray();
-  //     res.send({
-  //       success: true,
-  //       coaches,
-  //     });
-  //   } catch (error) {
-  //     console.error('getCoaches error: ', error);
-  //   }
-  // },
+  resetToDummyUsers: async (req, res) => {
+    console.log('resetToDummyUsers called');
+    try {
+      AdminController.purgeDatabase();
+      AdminController.insertDummyUsers();
+      return res.send({
+        success: true,
+      });
+    } catch (error) {
+      return console.error('resetToDummyUsers error: ', error);
+    }
+  }
 };
 
 module.exports = AdminController;
