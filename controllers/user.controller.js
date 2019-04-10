@@ -1,11 +1,10 @@
-const { getMongoDatabase } = require('../connections/mongoConnection');
+const { getCollection } = require('../connections/mongoConnection');
 
 const UserController = {
   getUserByEmail: async (req, res) => {
     try {
       const { email } = req.params;
-      const db = getMongoDatabase();
-      const collection = db.collection('user');
+      const collection = getCollection('user');
       const user = await collection.findOne({ email });
       res.send({
         success: true,
@@ -19,8 +18,7 @@ const UserController = {
     try {
       const { user } = req.body;
   
-      const db = getMongoDatabase();
-      const collection = db.collection('user');
+      const collection = getCollection('user');
       await collection.insertOne(user);
       res.send({
         success: true,
@@ -31,8 +29,7 @@ const UserController = {
   },
   getCoaches: async (req, res) => {
     try {
-      const db = getMongoDatabase();
-      const collection = db.collection('user');
+      const collection = getCollection('user');
       const coaches = await collection
         .find({
           role: {

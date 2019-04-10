@@ -1,4 +1,4 @@
-const { getMongoDatabase } = require('../connections/mongoConnection');
+const { getCollection } = require('../connections/mongoConnection');
 
 const LessonController = {
   joinLesson: async (req, res) => {
@@ -29,8 +29,7 @@ const LessonController = {
       }
       newList.push(user);
 
-      const db = getMongoDatabase();
-      const collection = db.collection('user');
+      const collection = getCollection('user');
       const updatedCoach = await collection.findOneAndUpdate(
         { name: coach.name, email: coach.email },
         {
@@ -53,8 +52,29 @@ const LessonController = {
         });
       }
 
+
+      const updatedUser = await collection.findOneAndUpdate(
+        { name: user.name, email: user.email },
+        {
+          $set: {
+            coach: {
+              coach: updatedCoach.value,
+              isRegistered: true,
+            },
+          },
+        },
+      );
+
+      if (!updatedUser.ok) {
+        res.send({
+          success: false,
+          message: 'The user is not updated correctly',
+        });
+      }
+
       return res.send({
         success: true,
+        user: updatedUser.value,
         coach: updatedCoach.value,
       });
 
