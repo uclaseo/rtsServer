@@ -2,10 +2,14 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const { initializeMongo } = require('./connections/mongoConnection');
 
+const AdminRouter = require('./routes/admin.routes');
 const userRouter = require('./routes/user.routes');
+const lessonRouter = require('./routes/lesson.routes');
 
 const routers = [
+  AdminRouter,
   userRouter,
+  lessonRouter,
 ];
 
 const app = express();

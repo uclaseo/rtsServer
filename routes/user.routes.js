@@ -6,7 +6,10 @@ const router = express.Router();
 router.route('/user/:email')
   .get(UserController.getUserByEmail);
 
-router.route('/user')
+router.route('/user/create')
   .post(UserController.createUser);
+
+router.route('/user/coach/getCoaches')
+  .get(UserController.getCoaches);
 
 module.exports = router;

@@ -21,7 +21,14 @@ const initializeMongo = () => new Promise((resolve, reject) => {
 
 const getMongoDatabase = () => _db;
 
+const getCollection = (collectionName) => {
+  const db = getMongoDatabase();
+  const collection = db.collection(collectionName);
+  return collection;
+};
+
 module.exports = {
   initializeMongo,
   getMongoDatabase,
+  getCollection,
 };
