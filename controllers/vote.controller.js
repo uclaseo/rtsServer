@@ -27,7 +27,15 @@ const VoteController = {
     console.log('getOpenVotes called');
     try {
       const collection = getCollection('vote');
-      res.send('hi')
+      const openVotes = await collection
+      .find({
+        isOpen: true,
+      })
+      .toArray();
+      return res.send({
+        success: true,
+        openVotes
+      });
     } catch (error) {
       return console.error('getOpenVotes error: ', error);
     }
@@ -36,9 +44,15 @@ const VoteController = {
     console.log('getClosedVotes called');
     try {
       const collection = getCollection('vote');
-
-      res.send('bye')
-
+      const closedVotes = await collection
+      .find({
+        isOpen: false,
+      })
+      .toArray();
+      return res.send({
+        success: true,
+        closedVotes
+      });
     } catch (error) {
       return console.error('getClosedVotes error: ', error);
     }
