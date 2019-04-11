@@ -3,6 +3,9 @@ const VoteController = require('../controllers/vote.controller');
 
 const router = express.Router();
 
+router.route('/vote/create')
+  .post(VoteController.createVote);
+
 router.route('/vote/openVotes')
   .get(VoteController.getOpenVotes);
 

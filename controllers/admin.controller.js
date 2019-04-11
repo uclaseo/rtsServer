@@ -1,23 +1,58 @@
 const { getCollection } = require('../connections/mongoConnection');
 
 const AdminController = {
-  purgeDatabase: async (req, res) => {
-    console.log('purgeDatabase called');
+  // purgeCollections: async (req, res) => {
+  //   console.log('purgeCollections called');
+  //   try {
+  //     const collection = getCollection('user');
+  //     const { result } = await collection.deleteMany({});
+  //     if (!result.ok) {
+  //       return res.send({
+  //         success: false,
+  //         message: 'purgeCollections did not correctly purge all collections',
+  //       });
+  //     }
+  //     return res.send({
+  //       success: true,
+  //     });
+  //   } catch (error) {
+  //     return console.error('purgeCollections error: ', error);
+  //   }
+  // },
+  purgeUserCollection: async (req, res) => {
+    console.log('purgeUserCollection called');
     try {
       const collection = getCollection('user');
-      const { result } = await collection.remove({});
-      console.log(result);
+      const { result } = await collection.deleteMany({});
       if (!result.ok) {
         return res.send({
           success: false,
-          message: 'purgeDatabase did not correctly removed database',
+          message: 'purgeUserCollection did not correctly purge user collection',
+        });
+      }
+      return res.send({
+        success: true,
+      });
+    } catch (error ) {
+      return console.error('purgeUserCollection error: ', error);
+    }
+  },
+  purgeVoteCollection: async (req, res) => {
+    console.log('purgeVoteCollection called');
+    try {
+      const collection = getCollection('vote');
+      const { result } = await collection.deleteMany({});
+      if (!result.ok) {
+        return res.send({
+          success: false,
+          message: 'purgeVoteCollection did not correctly purge vote collection',
         });
       }
       return res.send({
         success: true,
       });
     } catch (error) {
-      return console.error('purgeDatabase error: ', error);
+      return console.error('purgeVoteCollection error: ', error);
     }
   },
   insertDummyUsers: async (req, res) => {
@@ -102,7 +137,7 @@ const AdminController = {
       if (!result.ok) {
         return res.send({
           success: false,
-          message: 'insertDummyData did not insert correctly',
+          message: 'insertDummyData did not correctly insert',
         });
       }
       return res.send({
