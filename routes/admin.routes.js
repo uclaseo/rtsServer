@@ -3,8 +3,14 @@ const AdminController = require('../controllers/admin.controller');
 
 const router = express.Router();
 
-router.route('/admin/purgeDatabase')
-  .get(AdminController.purgeDatabase);
+// router.route('/admin/purgeCollections')
+//   .get(AdminController.purgeCollections);
+
+router.route('/admin/purgeUserCollection')
+  .get(AdminController.purgeUserCollection);
+
+router.route('/admin/purgeVoteCollection')
+  .get(AdminController.purgeVoteCollection);
 
 router.route('/admin/insertDummyUsers')
   .get(AdminController.insertDummyUsers);
