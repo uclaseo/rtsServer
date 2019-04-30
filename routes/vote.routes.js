@@ -7,7 +7,8 @@ router.route('/vote/create')
   .post(VoteController.createVote);
 
 router.route('/vote/openVotes')
-  .get(VoteController.getOpenVotes);
+  .get(VoteController.getOpenVotes)
+  .put(VoteController.vote);
 
 router.route('/vote/closedVotes')
   .get(VoteController.getClosedVotes);
