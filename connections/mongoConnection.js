@@ -1,4 +1,4 @@
-const { MongoClient } = require('mongodb');
+const { MongoClient, ObjectId } = require('mongodb');
 const config = require('../config.json');
 
 let _db;
@@ -16,7 +16,7 @@ const initializeMongo = () => new Promise((resolve, reject) => {
     })
     .catch((error) => {
       return reject(error);
-    })
+    });
 });
 
 const getMongoDatabase = () => _db;
@@ -27,8 +27,13 @@ const getCollection = (collectionName) => {
   return collection;
 };
 
+const getObjectId = (id) => {
+  return ObjectId(id);
+}
+
 module.exports = {
   initializeMongo,
   getMongoDatabase,
   getCollection,
+  getObjectId,
 };

@@ -1,8 +1,8 @@
-const { getCollection } = require('../connections/mongoConnection');
+const { getCollection, getObjectId } = require('../connections/mongoConnection');
 
 const VoteController = {
   createVote: async (req, res) => {
-    console.log('createVote calaled');
+    console.log('createVote called');
     try {
       console.log('req.body', req.body);
       const { body } = req;
@@ -28,14 +28,14 @@ const VoteController = {
     try {
       const collection = getCollection('vote');
       const openVotes = await collection
-      .find({
-        isOpen: true,
-      })
-      .toArray();
-      return res.send({
-        success: true,
-        openVotes
-      });
+        .find({
+          isOpen: true,
+        })
+        .toArray();
+        return res.send({
+          success: true,
+          openVotes
+        });
     } catch (error) {
       return console.error('getOpenVotes error: ', error);
     }
@@ -45,16 +45,65 @@ const VoteController = {
     try {
       const collection = getCollection('vote');
       const closedVotes = await collection
-      .find({
-        isOpen: false,
-      })
-      .toArray();
-      return res.send({
-        success: true,
-        closedVotes
-      });
+        .find({
+          isOpen: false,
+        })
+        .toArray();
+        return res.send({
+          success: true,
+          closedVotes
+        });
     } catch (error) {
       return console.error('getClosedVotes error: ', error);
+    }
+  },
+  vote: async (req, res) => {
+    console.log('vote');
+    try {
+      const { user, voteId, voteOption } = req.body;
+      const { id: voteOptionId } = voteOption;
+      const collection = getCollection('vote');
+      const vote = await collection.findOne(
+        { _id: getObjectId(voteId) },
+      );
+      const updatedVoteOptions = vote.options.map((option) => {
+        if (option.id === voteOptionId) {
+          option.votedUsers.push({
+            _id: user._id,
+            name: user.name,
+            email: user.email,
+          });
+        }
+        return option;
+      });
+
+      const updatedVote = await collection.findOneAndUpdate(
+        { _id: getObjectId(voteId) },
+        {
+          $set: {
+            options: updatedVoteOptions,
+          },
+        },
+        {
+          returnOriginal: false,
+        },
+      );
+
+      if (!updatedVote.ok) {
+        return res.send({
+          success: false,
+          message: 'The vote is not updated correctly',
+        });
+      }
+
+      return res.send({
+        success: true,
+        vote: updatedVote.value,
+      });
+
+
+    } catch (error) {
+      return console.error('vote error: ', error);
     }
   },
 };
