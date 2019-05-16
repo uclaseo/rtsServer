@@ -61,6 +61,7 @@ const VoteController = {
     console.log('vote');
     // test
     //test
+    //test
     try {
       const { user, voteId, voteOption } = req.body;
       const { id: voteOptionId } = voteOption;
