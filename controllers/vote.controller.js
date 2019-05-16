@@ -66,6 +66,7 @@ const VoteController = {
       const vote = await collection.findOne(
         { _id: getObjectId(voteId) },
       );
+      let totalVotes = 0;
       const updatedVoteOptions = vote.options.map((option) => {
         if (option.id === voteOptionId) {
           option.votedUsers.push({
@@ -74,6 +75,7 @@ const VoteController = {
             email: user.email,
           });
         }
+        totalVotes += option.votedUsers.length;
         return option;
       });
 
@@ -82,6 +84,7 @@ const VoteController = {
         {
           $set: {
             options: updatedVoteOptions,
+            voteCount: totalVotes,
           },
         },
         {
