@@ -59,6 +59,7 @@ const VoteController = {
   },
   vote: async (req, res) => {
     console.log('vote');
+    // test
     try {
       const { user, voteId, voteOption } = req.body;
       const { id: voteOptionId } = voteOption;
